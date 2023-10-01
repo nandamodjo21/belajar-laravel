@@ -6,10 +6,17 @@
   </div>
   
   <div class="table-responsive col-lg-8">
-    <button type="button" class="btn btn-primary mt-3" data-toggle="modal" data-target="#addModal">
+    <button type="button" class="btn btn-primary mt-3 mb-3" data-toggle="modal" data-target="#addModal">
         Tambah
       </button>
-      
+      @if (session()->has('success'))
+      <div class="alert alert-success alert-dismissible fade show mb-3" role="alert">
+          {{ session('success') }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        @endif
        <table class="table table-striped table-sm mt-3">
       <thead>
         <tr>
@@ -31,7 +38,11 @@
         <td>
             <a href="/dashboard/posts/{{ $post->slug }}" class="badge bg-info"> <span data-feather="eye"></span></a>
             <a href="" class="badge bg-warning"> <span data-feather="edit"></span></a>
-            <a href="" class="badge bg-danger"> <span data-feather="x-circle"></span></a>
+            <form action="/dashboard/posts/{{ $post->slug }}" class="d-inline" method="POST">
+            @csrf
+            @method('delete')
+            <button class="badge bg-danger border-0" onclick="return confirm('Are you sure?')"><span data-feather="x-circle"></button>
+            </form>
         </td>
         </tr>
         @endforeach
@@ -48,34 +59,63 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
+        <form action="/dashboard/posts" method="POST">
+          @csrf
         <div class="modal-body">
-        <form action="/dashboard/posts" method="post">
-            @csrf
                 <div class="form-group">
                   <label for="title">Title</label>
-                  <input type="text" name="title" class="form-control" id="title">
+                  <input type="text" name="title" value="{{ old('title') }}" class="form-control @error('title') is-invalid @enderror" id="title" required autofocus>
+                  @error('title')
+                      <div class="invalid-feedback">
+                        {{ $message }}
+                      </div>
+                  @enderror
                 </div>
                 <div class="form-group">
-                    <label for="slug">Slug</label>
-                    <input type="text" name="slug" class="form-control" id="slug" disabled readonly>
+                    <label for="slug" class="form-label">Slug</label>
+                    <input type="text" name="slug" value="{{ old('slug') }}" class="form-control @error('slug') is-invalid @enderror" id="slug" required autofocus>
+                    @error('slug')
+                    <div class="invalid-feedback">
+                      {{ $message }}
+                    </div>
+                @enderror
                   </div>
                   <div class="form-group">
                     <label for="category">Category</label>
-                    <select class="custom-select" name="category_id" id="category_id">
+                    <select class="custom-select @error('category_id') is-invalid @enderror" name="category_id" id="category_id" required autofocus>
                         <option selected>--pilih--</option>
                         @foreach ($data as $data)
+                        @if (old('category_id')=== $data->id)
+                        <option value="{{ $data->id }}" selected>{{ $data->name }}</option>
+                       @else
                         <option value="{{ $data->id }}">{{ $data->name }}</option>
+                        @endif
                         @endforeach
-                        
-                       
                       </select>
+                      @error('category_id')
+                      <div class="invalid-feedback">
+                        {{ $message }}
+                      </div>
+                  @enderror
                   </div>    
-        </form>
+                  <div class="form-group">
+                    <label for="body">Body</label>
+                    <textarea class="form-control @error('body')
+                        is-invalid
+                    @enderror" id="body" name="body" rows="3" value="{{ old('body') }}" required autofocus></textarea>
+                    @error('body')
+                    <div class="invalid-feedback">
+                      {{ $message }}
+                    </div>
+                @enderror
+                  </div>    
+       
         </div>
         <div class="modal-footer">
           <button type="reset" class="btn btn-secondary" data-dismiss="modal">Close</button>
           <button type="submit" class="btn btn-primary">Save changes</button>
         </div>
+      </form>
       </div>
     </div>
   </div>
