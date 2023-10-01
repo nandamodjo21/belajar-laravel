@@ -18,7 +18,7 @@ class Post extends Model
     // protected $fillable = ['title','body','isi'];
 
     //yg ini tidak bisa di isi
-    // protected $guarded = ['id'];
+    protected $guarded = ['id'];
 
     public function sluggable(): array
     {
