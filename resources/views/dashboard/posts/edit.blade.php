@@ -12,7 +12,7 @@
     @if ($post)
     <!-- Kode untuk menampilkan form edit -->
 
-    <form class="mb-3" action="/dashboard/posts/{{ $post->slug }}" method="POST">
+    <form class="mb-3" action="/dashboard/posts/{{ $post->slug }}" method="POST" enctype="multipart/form-data">
         @method('put')
         @csrf
               <div class="form-group">
@@ -50,6 +50,17 @@
                       {{ $message }}
                     </div>
                 @enderror
+                </div>
+                <div class="form-group">
+                  <label for="image" class="form-label">Foto</label>
+                  <input type="hidden" name="oldImage" value="{{ $post->image }}">
+                  <img src="{{ asset('storage/' . $post->image) }}" class="img-preview img-fluid mb-3 col-sm-5 d-block">
+                  <input type="file" class="form-control @error('image') is-invalid @enderror" name="image" id="image" onchange="previewImage()" required>
+                  @error('image')
+                  <div class="invalid-feedback">
+                    {{ $message }}
+                  </div>
+              @enderror
                 </div>    
                 <div class="form-group">
                   <label for="body">Body</label>
@@ -81,5 +92,17 @@
       .then(response => response.json())
       .then(data => slug.value = data.slug)
   });
+  function previewImage(){
+      const image = document.querySelector('#image');
+    const imgPreview = document.querySelector('.img-preview');
+
+    imgPreview.style.display = 'block';
+
+    const ofReader = new FileReader();
+    ofReader.readAsDataURL(image.files[0]);
+    ofReader.onload = function(oFREvent){
+      imgPreview.src = oFREvent.target.result;
+    }
+    }
 </script>
 @endsection
