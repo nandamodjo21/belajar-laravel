@@ -13,8 +13,17 @@
                     @method('delete')
                     <button class="btn btn-danger" onclick="return confirm('Are you sure?')"><span data-feather="x-circle"></span>Hapus</button>
                     </form>
-              <img src="https://source.unsplash.com/1200x400?{{ $post->category->name }}" alt="{{ $post->category->name }}" class="img-fluid mt-3">
-              <article class="my-3 fs-5">
+                        @if ($post->image)
+                        <div style="max-height: 350px; overflow: hidden;">
+                            <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->category->name }}" class="img-fluid mt-3">
+                        <article class="my-3 fs-5">
+                        </div>    
+                        @else
+                        <img src="https://source.unsplash.com/1200x400?{{ $post->category->name }}" alt="{{ $post->category->name }}" class="img-fluid mt-3">
+                        <article class="my-3 fs-5">
+                        @endif
+                    
+            
                 {!! $post->body !!}
                 
             </article>
