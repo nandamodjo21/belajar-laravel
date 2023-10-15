@@ -9,8 +9,16 @@
                 <h1 class="mb-3">{{ $post->title }}</h1>
                 <p> By.
                 <a href="/blog?author={{ $post->author->username }}" class="text-decoration-none">{{ $post->author->name }}  </a> in <a href="/blog?category={{ $post->category->slug }}" class="text-decoration-none">{{ $post->category->name }}</a></p>
-              <img src="https://source.unsplash.com/1200x400?{{ $post->category->name }}" alt="{{ $post->category->name }}" class="img-fluid">
-              <article class="my-3 fs-5">
+                @if ($post->image)
+                <div style="max-height: 350px; overflow: hidden;">
+                    <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->category->name }}" class="img-fluid mt-3">
+                <article class="my-3 fs-5">
+                </div>    
+                @else
+                <img src="https://source.unsplash.com/1200x400?{{ $post->category->name }}" alt="{{ $post->category->name }}" class="img-fluid">
+                <article class="my-3 fs-5">
+                @endif
+             
                 {!! $post->body !!}
                 
             </article>
