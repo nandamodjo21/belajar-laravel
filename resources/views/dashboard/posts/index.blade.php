@@ -60,7 +60,7 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <form action="/dashboard/posts" method="POST">
+        <form action="/dashboard/posts" method="POST" enctype="multipart/form-data">
           @csrf
         <div class="modal-body">
                 <div class="form-group">
@@ -98,7 +98,18 @@
                         {{ $message }}
                       </div>
                   @enderror
-                  </div>    
+                  </div>
+                  <div class="form-group">
+                    <label for="image" class="form-label">Foto</label>
+                    <img class="img-preview img-fluid">
+                    <input type="file" class="form-control @error('image') is-invalid @enderror" name="image" id="image" onchange="previewImage()" required>
+                    @error('image')
+                    <div class="invalid-feedback">
+                      {{ $message }}
+                    </div>
+                @enderror
+                  </div>
+                    
                   <div class="form-group">
                     <label for="body">Body</label>
                     <textarea class="form-control @error('body')
@@ -133,6 +144,23 @@
         .then(response => response.json())
         .then(data => slug.value = data.slug)
     });
+
+    function previewImage(){
+      const image = document.querySelector('#image');
+    const imgPreview = document.querySelector('.img-preview');
+
+    imgPreview.style.display = 'block';
+
+    const ofReader = new FileReader();
+    ofReader.readAsDataURL(image.files[0]);
+    ofReader.onload = function(oFREvent){
+      imgPreview.src = oFREvent.target.result;
+
+    }
+    
+    }
+
+    
   </script>
 @endsection
 
