@@ -24,6 +24,7 @@
           <th>Category Name</th>
           <th>Action</th>
           
+          
         </tr>
       </thead>
       <tbody>
